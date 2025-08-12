@@ -1,0 +1,11 @@
+venv
+testvenv
+.idea
+.vscode/*
+__pycache__
+media/*
+!*media/.gitkeep
+backup/*
+todo.txt
+htmlcov
+.coverage
