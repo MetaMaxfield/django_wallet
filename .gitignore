@@ -9,3 +9,4 @@ backup/*
 todo.txt
 htmlcov
 .coverage
+pgdata
