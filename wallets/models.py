@@ -4,6 +4,7 @@ import uuid
 
 from django.core.validators import MinValueValidator
 from django.db import models
+from rest_framework.exceptions import ValidationError
 
 
 class Operation(models.Model):
@@ -53,6 +54,21 @@ class Wallet(models.Model):
     balance = models.PositiveBigIntegerField(
         verbose_name='Баланс', default=0, editable=False
     )
+
+    def deposit(self, amount):
+        """Deposit to balance."""
+        self.balance += amount
+        self.save(update_fields=['balance'])
+
+    def withdraw(self, amount):
+        """Withdraw from balance or raise exception."""
+        if self.balance >= amount:
+            self.balance -= amount
+            self.save(update_fields=['balance'])
+        else:
+            raise ValidationError(
+                'На балансе недостаточно средств для проведения операции.'
+            )
 
     def __str__(self):
         """Represent a string."""

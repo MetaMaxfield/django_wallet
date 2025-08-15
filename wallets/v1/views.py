@@ -1,9 +1,8 @@
 """Views V1."""
 
 from django.db import transaction
-from django.shortcuts import get_object_or_404
 from rest_framework import generics
-from rest_framework.exceptions import ValidationError
+from services.wallet_operation import preform_wallet_operation
 from wallets.models import Operation, Wallet
 from wallets.v1.serializers import (
     OperationCreateSerializer,
@@ -43,21 +42,4 @@ class OperationCreateViewV1(generics.CreateAPIView):
     @transaction.atomic
     def perform_create(self, serializer):
         """Perform create."""
-        wallet = get_object_or_404(
-            Wallet.objects.select_for_update(), uuid=self.kwargs['wallet_uuid']
-        )
-        operation = serializer.save(wallet=wallet)
-
-        if operation.operation_type == Operation.DEPOSIT:
-            wallet.balance += operation.amount
-        elif operation.operation_type == Operation.WITHDRAW:
-            if wallet.balance >= operation.amount:
-                wallet.balance -= operation.amount
-            else:
-                raise ValidationError(
-                    'На балансе недостаточно средств для проведения операции.'
-                )
-        else:
-            raise ValidationError('Неизвестный тип операции.')
-
-        wallet.save(update_fields=['balance'])
+        preform_wallet_operation(serializer, self.kwargs['wallet_uuid'])
