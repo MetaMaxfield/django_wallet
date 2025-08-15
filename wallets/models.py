@@ -2,6 +2,7 @@
 
 import uuid
 
+from django.core.validators import MinValueValidator
 from django.db import models
 
 
@@ -18,7 +19,10 @@ class Operation(models.Model):
         null=False,
     )
     amount = models.PositiveBigIntegerField(
-        verbose_name='Величина', blank=False, null=False
+        verbose_name='Величина',
+        blank=False,
+        null=False,
+        validators=[MinValueValidator(1)],
     )
     date = models.DateTimeField(auto_now_add=True, editable=False)
     wallet = models.ForeignKey(
