@@ -16,10 +16,9 @@ class Operation(models.Model):
         choices=OPERATION_TYPES,
         blank=False,
         null=False,
-        editable=False,
     )
     amount = models.PositiveBigIntegerField(
-        verbose_name='Величина', blank=False, null=False, editable=False
+        verbose_name='Величина', blank=False, null=False
     )
     date = models.DateTimeField(auto_now_add=True, editable=False)
     wallet = models.ForeignKey(
@@ -27,7 +26,6 @@ class Operation(models.Model):
         blank=False,
         null=False,
         on_delete=models.PROTECT,
-        editable=False,
         related_name='operations',
     )
 
