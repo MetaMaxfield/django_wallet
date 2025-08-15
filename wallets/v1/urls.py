@@ -1,7 +1,7 @@
 """Url patterns V1."""
 
 from django.urls import URLPattern, path
-from wallets.v1.views import WalletRetrieveViewV1
+from wallets.v1.views import OperationCreateViewV1, WalletRetrieveViewV1
 
 urlpatterns: list[URLPattern] = [
     path(
@@ -9,5 +9,9 @@ urlpatterns: list[URLPattern] = [
         WalletRetrieveViewV1.as_view(),
         name='wallet-retrieve-v1',
     ),
-    # path('<WALLET_UUID>/operation/' WalletOperationViewV1.as_view()),
+    path(
+        '<uuid:wallet_uuid>/operation/',
+        OperationCreateViewV1.as_view(),
+        name='operation-create-v1',
+    ),
 ]
