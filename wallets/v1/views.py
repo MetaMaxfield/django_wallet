@@ -1,6 +1,5 @@
 """Views V1."""
 
-from django.db import transaction
 from rest_framework import generics
 from services.wallet_operation import preform_wallet_operation
 from wallets.models import Operation, Wallet
@@ -39,7 +38,6 @@ class OperationCreateViewV1(generics.CreateAPIView):
     model = Operation
     serializer_class = OperationCreateSerializer
 
-    @transaction.atomic
     def perform_create(self, serializer):
         """Perform create."""
         preform_wallet_operation(serializer, self.kwargs['wallet_uuid'])

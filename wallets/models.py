@@ -4,6 +4,7 @@ import uuid
 
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.db.models import F
 from rest_framework.exceptions import ValidationError
 
 
@@ -57,13 +58,13 @@ class Wallet(models.Model):
 
     def deposit(self, amount):
         """Deposit to balance."""
-        self.balance += amount
+        self.balance = F('balance') + amount
         self.save(update_fields=['balance'])
 
     def withdraw(self, amount):
         """Withdraw from balance or raise exception."""
         if self.balance >= amount:
-            self.balance -= amount
+            self.balance = F('balance') - amount
             self.save(update_fields=['balance'])
         else:
             raise ValidationError(
