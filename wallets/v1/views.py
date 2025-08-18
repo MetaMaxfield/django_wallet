@@ -1,6 +1,7 @@
 """Views V1."""
 
-from rest_framework import generics
+from drf_spectacular.utils import extend_schema, inline_serializer
+from rest_framework import generics, serializers
 from services.wallet_operation import preform_wallet_operation
 from wallets.models import Operation, Wallet
 from wallets.v1.serializers import (
@@ -26,6 +27,20 @@ class WalletRetrieveViewV1(generics.RetrieveAPIView):
     lookup_url_kwarg = 'wallet_uuid'
 
 
+@extend_schema(
+    request=inline_serializer(
+        name='OperationCreateRequest',
+        fields={
+            'operation_type': serializers.ChoiceField(
+                choices=[Operation.DEPOSIT, Operation.WITHDRAW]
+            ),
+            'amount': serializers.IntegerField(
+                min_value=1, max_value=9223372036854776000
+            ),
+        },
+    ),
+    responses=OperationCreateSerializer,
+)
 class OperationCreateViewV1(generics.CreateAPIView):
     """
     API endpoint for creating wallet operations (v1).

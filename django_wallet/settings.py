@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'users',
     'wallets',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -146,3 +147,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # User model
 
 AUTH_USER_MODEL = "users.User"
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'blog_by_me_DRF',
+    'DESCRIPTION': 'My blog.',
+    'VERSION': '0.0.1',
+    'SERVE_INCLUDE_SCHEMA': False,
+}
